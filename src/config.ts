@@ -15,20 +15,20 @@ export const ACCELERATION = 0.008;
 export const FRICTION = 0.92;
 export const NODE_MERGE_RESOLUTION = 0.4;
 
-// Road rendering
-export const ROAD_SPECS: Record<string, { width: number; color: number; edgeGlow: number | null; dashes: boolean }> = {
-  motorway: { width: 7, color: 0x3A3A55, edgeGlow: 0xFF6644, dashes: true },
-  trunk:    { width: 6, color: 0x353550, edgeGlow: 0xFF8844, dashes: true },
-  primary:  { width: 5, color: 0x30304A, edgeGlow: 0xFFAA44, dashes: true },
-  secondary:{ width: 3.5, color: 0x2A2A42, edgeGlow: 0x44AAFF, dashes: false },
-  tertiary: { width: 2.8, color: 0x252540, edgeGlow: 0x44FFAA, dashes: false },
-  residential: { width: 2.0, color: 0x222238, edgeGlow: null, dashes: false },
-  service:  { width: 1.5, color: 0x1F1F34, edgeGlow: null, dashes: false },
-  footway:  { width: 0.8, color: 0x1A1A2C, edgeGlow: null, dashes: false },
-  cycleway: { width: 0.8, color: 0x1A1A2C, edgeGlow: null, dashes: false },
-  pedestrian: { width: 1.0, color: 0x1A1A2C, edgeGlow: null, dashes: false },
-  living_street: { width: 1.8, color: 0x202036, edgeGlow: null, dashes: false },
-  unclassified: { width: 2.0, color: 0x222238, edgeGlow: null, dashes: false },
+// Road rendering — brighter colors, glow on all types
+export const ROAD_SPECS: Record<string, { width: number; color: number; edgeGlow: number; dashes: boolean }> = {
+  motorway: { width: 7, color: 0x4a4a6a, edgeGlow: 0xFF6644, dashes: true },
+  trunk:    { width: 6, color: 0x454565, edgeGlow: 0xFF8844, dashes: true },
+  primary:  { width: 5, color: 0x404060, edgeGlow: 0xFFAA44, dashes: true },
+  secondary:{ width: 3.5, color: 0x3a3a58, edgeGlow: 0x44AAFF, dashes: false },
+  tertiary: { width: 2.8, color: 0x353555, edgeGlow: 0x44FFAA, dashes: false },
+  residential: { width: 2.0, color: 0x303050, edgeGlow: 0x335566, dashes: false },
+  service:  { width: 1.5, color: 0x2a2a48, edgeGlow: 0x2a3344, dashes: false },
+  footway:  { width: 0.8, color: 0x252542, edgeGlow: 0x223344, dashes: false },
+  cycleway: { width: 0.8, color: 0x252542, edgeGlow: 0x224433, dashes: false },
+  pedestrian: { width: 1.0, color: 0x282845, edgeGlow: 0x223344, dashes: false },
+  living_street: { width: 1.8, color: 0x2c2c4a, edgeGlow: 0x334455, dashes: false },
+  unclassified: { width: 2.0, color: 0x303050, edgeGlow: 0x334455, dashes: false },
 };
 
 // Vehicles

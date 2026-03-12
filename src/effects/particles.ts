@@ -1,22 +1,22 @@
 import * as THREE from 'three';
 
-const PARTICLE_COUNT = 200;
+const PARTICLE_COUNT = 300;
 
-/** Ambient floating particles in the scene (dust, fireflies) */
+/** Ambient floating particles — firefly-like specks scattered in the city */
 export function createAmbientParticles(): THREE.Points {
   const positions = new Float32Array(PARTICLE_COUNT * 3);
   const colors = new Float32Array(PARTICLE_COUNT * 3);
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 300;
-    positions[i * 3 + 1] = 1 + Math.random() * 30;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 300;
+    positions[i * 3] = (Math.random() - 0.5) * 200;
+    positions[i * 3 + 1] = 0.5 + Math.random() * 15;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 200;
 
-    // Teal-ish with some warm variation
-    const warm = Math.random() > 0.7;
-    colors[i * 3] = warm ? 0.8 : 0.0;
-    colors[i * 3 + 1] = warm ? 0.5 : 0.7 + Math.random() * 0.3;
-    colors[i * 3 + 2] = warm ? 0.2 : 0.5 + Math.random() * 0.3;
+    // Brighter teal / warm mix
+    const warm = Math.random() > 0.75;
+    colors[i * 3] = warm ? 1.0 : 0.0;
+    colors[i * 3 + 1] = warm ? 0.7 : 1.0;
+    colors[i * 3 + 2] = warm ? 0.3 : 0.8;
   }
 
   const geo = new THREE.BufferGeometry();
@@ -24,10 +24,10 @@ export function createAmbientParticles(): THREE.Points {
   geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
   const mat = new THREE.PointsMaterial({
-    size: 0.4,
+    size: 0.8,
     vertexColors: true,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.85,
     sizeAttenuation: true,
   });
 

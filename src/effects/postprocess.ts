@@ -79,12 +79,12 @@ export function createPostProcessing(
   const renderPass = new RenderPass(scene, camera);
   composer.addPass(renderPass);
 
-  // Bloom - neon glow on road edges, landmarks, trails
+  // Bloom — lower threshold catches road glow + landmarks
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(size.x, size.y),
-    0.6,   // strength
-    0.4,   // radius
-    0.85,  // threshold
+    1.0,   // strength — visible neon glow
+    0.5,   // radius
+    0.25,  // threshold — catch dim emissive surfaces too
   );
   composer.addPass(bloom);
 

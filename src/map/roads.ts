@@ -30,7 +30,6 @@ export function createRoadMeshes(graph: RoadGraph): THREE.Group {
       const halfW = spec.width / 2;
 
       for (let i = 0; i < pts.length; i++) {
-        // Compute perpendicular direction
         let dx: number, dz: number;
         if (i < pts.length - 1) {
           dx = pts[i + 1].x - pts[i].x;
@@ -43,7 +42,6 @@ export function createRoadMeshes(graph: RoadGraph): THREE.Group {
         const nx = -dz / len;
         const nz = dx / len;
 
-        // Left and right vertices
         positions.push(pts[i].x + nx * halfW, 0.01, pts[i].z + nz * halfW);
         positions.push(pts[i].x - nx * halfW, 0.01, pts[i].z - nz * halfW);
 
@@ -63,8 +61,13 @@ export function createRoadMeshes(graph: RoadGraph): THREE.Group {
     geo.setIndex(indices);
     geo.computeVertexNormals();
 
-    const mat = new THREE.MeshBasicMaterial({
+    // Use MeshStandardMaterial with emissive for road glow
+    const emissiveColor = new THREE.Color(spec.edgeGlow);
+    const mat = new THREE.MeshStandardMaterial({
       color: spec.color,
+      emissive: emissiveColor,
+      emissiveIntensity: 0.08,
+      roughness: 0.8,
       side: THREE.DoubleSide,
     });
 
@@ -72,41 +75,45 @@ export function createRoadMeshes(graph: RoadGraph): THREE.Group {
     mesh.name = `road-${type}`;
     group.add(mesh);
 
-    // Edge glow lines
-    if (spec.edgeGlow !== null) {
-      for (const ei of edgeIndices) {
-        const edge = graph.edges[ei];
-        if (edge.pts.length < 2) continue;
+    // Edge glow lines — brighter, thicker
+    const isMajor = type === 'motorway' || type === 'trunk' || type === 'primary' || type === 'secondary' || type === 'tertiary';
+    const glowOpacity = isMajor ? 0.75 : 0.3;
 
-        const halfW = spec.width / 2;
-        const glowPtsLeft: THREE.Vector3[] = [];
-        const glowPtsRight: THREE.Vector3[] = [];
+    for (const ei of edgeIndices) {
+      const edge = graph.edges[ei];
+      if (edge.pts.length < 2) continue;
+      // Only draw glow for every Nth minor road to save draw calls
+      if (!isMajor && ei % 3 !== 0) continue;
 
-        for (let i = 0; i < edge.pts.length; i++) {
-          let dx: number, dz: number;
-          if (i < edge.pts.length - 1) {
-            dx = edge.pts[i + 1].x - edge.pts[i].x;
-            dz = edge.pts[i + 1].z - edge.pts[i].z;
-          } else {
-            dx = edge.pts[i].x - edge.pts[i - 1].x;
-            dz = edge.pts[i].z - edge.pts[i - 1].z;
-          }
-          const len = Math.sqrt(dx * dx + dz * dz) || 1;
-          const nx = -dz / len;
-          const nz = dx / len;
+      const halfW = spec.width / 2;
+      const glowPtsLeft: THREE.Vector3[] = [];
+      const glowPtsRight: THREE.Vector3[] = [];
 
-          glowPtsLeft.push(new THREE.Vector3(edge.pts[i].x + nx * halfW, 0.05, edge.pts[i].z + nz * halfW));
-          glowPtsRight.push(new THREE.Vector3(edge.pts[i].x - nx * halfW, 0.05, edge.pts[i].z - nz * halfW));
+      for (let i = 0; i < edge.pts.length; i++) {
+        let dx: number, dz: number;
+        if (i < edge.pts.length - 1) {
+          dx = edge.pts[i + 1].x - edge.pts[i].x;
+          dz = edge.pts[i + 1].z - edge.pts[i].z;
+        } else {
+          dx = edge.pts[i].x - edge.pts[i - 1].x;
+          dz = edge.pts[i].z - edge.pts[i - 1].z;
         }
+        const len = Math.sqrt(dx * dx + dz * dz) || 1;
+        const nx = -dz / len;
+        const nz = dx / len;
 
-        const glowMat = new THREE.LineBasicMaterial({ color: spec.edgeGlow, transparent: true, opacity: 0.4 });
-
-        const leftGeo = new THREE.BufferGeometry().setFromPoints(glowPtsLeft);
-        group.add(new THREE.Line(leftGeo, glowMat));
-
-        const rightGeo = new THREE.BufferGeometry().setFromPoints(glowPtsRight);
-        group.add(new THREE.Line(rightGeo, glowMat));
+        glowPtsLeft.push(new THREE.Vector3(edge.pts[i].x + nx * halfW, 0.06, edge.pts[i].z + nz * halfW));
+        glowPtsRight.push(new THREE.Vector3(edge.pts[i].x - nx * halfW, 0.06, edge.pts[i].z - nz * halfW));
       }
+
+      const glowMat = new THREE.LineBasicMaterial({
+        color: spec.edgeGlow,
+        transparent: true,
+        opacity: glowOpacity,
+      });
+
+      group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(glowPtsLeft), glowMat));
+      group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(glowPtsRight), glowMat));
     }
   }
 

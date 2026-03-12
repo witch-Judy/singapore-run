@@ -30,7 +30,7 @@ function createMBS(parent: THREE.Group) {
   mbsGroup.position.set(pos.x, 0, pos.z);
 
   // 3 towers
-  const towerMat = new THREE.MeshLambertMaterial({ color: 0x2a3045, emissive: 0x0a1020 });
+  const towerMat = new THREE.MeshLambertMaterial({ color: 0x3a4565, emissive: 0x1a2540 });
   const towerGeo = new THREE.BoxGeometry(4, 55, 3);
 
   for (let i = -1; i <= 1; i++) {
@@ -41,7 +41,7 @@ function createMBS(parent: THREE.Group) {
     mbsGroup.add(tower);
 
     // Window strips
-    const windowMat = new THREE.MeshBasicMaterial({ color: 0x4488cc, transparent: true, opacity: 0.6 });
+    const windowMat = new THREE.MeshBasicMaterial({ color: 0x66bbff, transparent: true, opacity: 0.85 });
     for (let f = 0; f < 15; f++) {
       const strip = new THREE.Mesh(
         new THREE.PlaneGeometry(3.5, 0.3),
@@ -61,16 +61,20 @@ function createMBS(parent: THREE.Group) {
 
   // Pool glow on top
   const poolGeo = new THREE.PlaneGeometry(24, 3);
-  const poolMat = new THREE.MeshBasicMaterial({ color: 0x00aacc, transparent: true, opacity: 0.5 });
+  const poolMat = new THREE.MeshBasicMaterial({ color: 0x00ddff, transparent: true, opacity: 0.8 });
   const pool = new THREE.Mesh(poolGeo, poolMat);
   pool.rotation.x = -Math.PI / 2;
   pool.position.set(0, 56.6, 0);
   mbsGroup.add(pool);
 
-  // Glow light
-  const light = new THREE.PointLight(0x4488ff, 3, 80);
-  light.position.set(0, 58, 0);
-  mbsGroup.add(light);
+  // Glow lights
+  const topLight = new THREE.PointLight(0x4488ff, 5, 120);
+  topLight.position.set(0, 58, 0);
+  mbsGroup.add(topLight);
+
+  const baseLight = new THREE.PointLight(0x2266cc, 3, 60);
+  baseLight.position.set(0, 10, 0);
+  mbsGroup.add(baseLight);
 
   parent.add(mbsGroup);
 }
@@ -162,8 +166,8 @@ function createCBDCluster(parent: THREE.Group) {
     { ox: -12, oz: -4, w: 4, d: 3, h: 42 },
   ];
 
-  const towerMat = new THREE.MeshLambertMaterial({ color: 0x1a2040, emissive: 0x080c1a });
-  const glassMat = new THREE.MeshBasicMaterial({ color: 0x3366aa, transparent: true, opacity: 0.3 });
+  const towerMat = new THREE.MeshLambertMaterial({ color: 0x2a3560, emissive: 0x152040 });
+  const glassMat = new THREE.MeshBasicMaterial({ color: 0x4488cc, transparent: true, opacity: 0.5 });
 
   for (const t of towers) {
     const geo = new THREE.BoxGeometry(t.w, t.h, t.d);
@@ -178,10 +182,13 @@ function createCBDCluster(parent: THREE.Group) {
     parent.add(glass);
   }
 
-  // Area light
-  const light = new THREE.PointLight(0x4466aa, 2, 60);
-  light.position.set(center.x, 40, center.z);
-  parent.add(light);
+  // Area lights
+  const light1 = new THREE.PointLight(0x4466aa, 4, 80);
+  light1.position.set(center.x, 40, center.z);
+  parent.add(light1);
+  const light2 = new THREE.PointLight(0x3355aa, 2, 50);
+  light2.position.set(center.x + 10, 15, center.z);
+  parent.add(light2);
 }
 
 function createClarkeQuay(parent: THREE.Group) {

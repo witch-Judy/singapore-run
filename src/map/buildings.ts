@@ -27,20 +27,20 @@ function getZoneParams(x: number, z: number): BuildingParams {
   const chinaDist = distTo(x, z, CHINATOWN_CENTER.x, CHINATOWN_CENTER.z);
   const orchardDist = distTo(x, z, ORCHARD_CENTER.x, ORCHARD_CENTER.z);
 
-  // CBD - tall glass towers
+  // CBD - tall glass towers, bright blue
   if (cbdDist < 60) {
-    return { minH: 15, maxH: 65, baseColor: 0x1a2035, windowColor: 0x4488cc, emissive: 0x112244, density: 0.7 };
+    return { minH: 15, maxH: 65, baseColor: 0x2a3555, windowColor: 0x66bbff, emissive: 0x1a3366, density: 0.7 };
   }
-  // Chinatown - dense low-rise, warm colors
+  // Chinatown - dense low-rise, warm Peranakan colors
   if (chinaDist < 40) {
-    return { minH: 3, maxH: 8, baseColor: 0x3a2020, windowColor: 0xffaa44, emissive: 0x331100, density: 0.8 };
+    return { minH: 3, maxH: 8, baseColor: 0x5a3030, windowColor: 0xffcc66, emissive: 0x552200, density: 0.8 };
   }
-  // Orchard - medium retail
+  // Orchard - medium retail, cool blue
   if (orchardDist < 50) {
-    return { minH: 6, maxH: 20, baseColor: 0x252535, windowColor: 0x66aaff, emissive: 0x111122, density: 0.6 };
+    return { minH: 6, maxH: 20, baseColor: 0x353555, windowColor: 0x88ccff, emissive: 0x222244, density: 0.6 };
   }
   // Default residential
-  return { minH: 3, maxH: 12, baseColor: 0x1a1a2a, windowColor: 0x334466, emissive: 0x0a0a15, density: 0.35 };
+  return { minH: 3, maxH: 12, baseColor: 0x252540, windowColor: 0x556688, emissive: 0x151530, density: 0.35 };
 }
 
 export function createBuildings(graph: RoadGraph): THREE.Group {
@@ -126,7 +126,7 @@ export function createBuildings(graph: RoadGraph): THREE.Group {
 
     const mat = new THREE.MeshLambertMaterial({
       vertexColors: true,
-      emissive: new THREE.Color(baseColor).multiplyScalar(0.3),
+      emissive: new THREE.Color(baseColor).multiplyScalar(0.6),
     });
     const mesh = new THREE.Mesh(geo, mat);
     group.add(mesh);
@@ -232,10 +232,10 @@ function createWindowLights(
     geo.setAttribute('color', new THREE.Float32BufferAttribute(windowColors, 3));
 
     const mat = new THREE.PointsMaterial({
-      size: 0.6,
+      size: 1.2,
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.95,
       sizeAttenuation: true,
     });
     const points = new THREE.Points(geo, mat);
