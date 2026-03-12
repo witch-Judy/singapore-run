@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Singapore Run 跑图新加坡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #060610; }
+    canvas { display: block; }
+    #app { width: 100%; height: 100%; position: relative; }
+
+    #loading {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #060610; color: #00FFC8;
+      font-family: 'Orbitron', monospace;
+      z-index: 100;
+      transition: opacity 0.6s;
+    }
+    #loading.hidden { opacity: 0; pointer-events: none; }
+    #loading h1 { font-size: 2rem; margin-bottom: 1rem; letter-spacing: 0.3em; }
+    #loading .subtitle { font-family: 'Noto Sans SC', sans-serif; color: #668; font-size: 0.9rem; margin-bottom: 2rem; }
+    #loading .bar-bg {
+      width: 240px; height: 3px; background: #1a1a2c; border-radius: 2px;
+    }
+    #loading .bar-fill {
+      height: 100%; width: 0%; background: #00FFC8; border-radius: 2px;
+      transition: width 0.3s;
+    }
+    #loading .status { margin-top: 0.8rem; font-size: 0.7rem; color: #445; }
+
+    #hud {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      font-family: 'Orbitron', monospace;
+      color: #00FFC8;
+      z-index: 10;
+      display: none;
+    }
+    #hud.active { display: block; }
+    #speed { position: absolute; bottom: 24px; left: 24px; font-size: 1.4rem; }
+    #road-name { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: #668; }
+    #distance { position: absolute; bottom: 24px; right: 24px; font-size: 0.9rem; color: #668; }
+    #vehicle-bar {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; pointer-events: auto;
+    }
+    .vehicle-btn {
+      width: 40px; height: 40px; border: 1px solid #333;
+      background: rgba(6,6,16,0.8); color: #668;
+      font-family: 'Orbitron', monospace; font-size: 0.6rem;
+      cursor: pointer; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .vehicle-btn.active { border-color: #00FFC8; color: #00FFC8; }
+
+    #controls-hint {
+      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+      font-size: 0.6rem; color: #334; text-align: center;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    #junction-ui {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      display: none; gap: 16px; pointer-events: auto;
+    }
+    #junction-ui.active { display: flex; }
+    .junction-arrow {
+      width: 60px; height: 60px; border: 2px solid #00FFC8;
+      background: rgba(6,6,16,0.85); color: #00FFC8;
+      font-size: 1.5rem; cursor: pointer; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .junction-arrow:hover { background: rgba(0,255,200,0.15); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="loading">
+      <h1>SINGAPORE RUN</h1>
+      <div class="subtitle">跑图新加坡</div>
+      <div class="bar-bg"><div class="bar-fill" id="load-bar"></div></div>
+      <div class="status" id="load-status">initializing...</div>
+    </div>
+    <div id="hud">
+      <div id="road-name"></div>
+      <div id="speed"></div>
+      <div id="distance"></div>
+      <div id="vehicle-bar"></div>
+      <div id="controls-hint">W 前进 / A D 转向 / 拖拽环顾 / 1-5 切换载具</div>
+    </div>
+    <div id="junction-ui"></div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
